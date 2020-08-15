@@ -1,0 +1,23 @@
+{
+  "name": "@hellroot/codestyle",
+  "version": "1.0.0-1",
+  "description": "Codestyle tools",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "Evgeny Markov",
+    "url": "https://github.com/evgenymarkov"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "keywords": [
+    "configs",
+    "codestyle",
+    "eslint",
+    "prettier",
+    "stylelint"
+  ],
+  "dependencies": {
+    "prettier": "2.0.5"
+  }
+}

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   extends: ['stylelint-config-recommended', 'stylelint-config-prettier'],
   plugins: ['stylelint-order', 'stylelint-prettier'],

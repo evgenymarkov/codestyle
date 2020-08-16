@@ -22,6 +22,11 @@
     "stylelint"
   ],
   "type": "commonjs",
+  "files": [
+    "eslint",
+    "prettier",
+    "stylelint"
+  ],
   "dependencies": {
     "@types/eslint": "7.2.0",
     "@typescript-eslint/eslint-plugin": "3.9.0",

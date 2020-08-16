@@ -1,5 +1,26 @@
 'use strict';
 
+const cjsImportRules = {
+  'import/no-unresolved': ['error', { commonjs: true }],
+};
+
+const esmImportRules = {
+  'import/default': 'error',
+  'import/export': 'error',
+  'import/named': 'error',
+  'import/namespace': 'error',
+  'import/no-unresolved': 'error',
+
+  'import/no-duplicates': 'warn',
+  'import/no-named-as-default': 'warn',
+  'import/no-named-as-default-member': 'warn',
+};
+
+const tsImportRules = {
+  ...esmImportRules,
+  'import/named': 'off',
+};
+
 /**
  * JavaScript options
  *
@@ -19,6 +40,7 @@
  * Options
  *
  * @typedef {Object} Options
+ * @property {string[]} additionalPaths
  * @property {JavaScriptOptions} jsOptions
  * @property {TypeScriptOptions} tsOptions
  */
@@ -30,7 +52,8 @@
  * @returns {import('eslint').Linter.Config}
  */
 module.exports = (options) => {
-  const jsSourceType = options['jsOptions']['sourceType'];
+  const additionalPaths = options['additionalPaths'] || [];
+  const jsSourceType = options['jsOptions']['sourceType'] || 'module';
   const tsRootDir = options['tsOptions']['rootDir'];
   const tsProject = options['tsOptions']['project'];
 
@@ -41,12 +64,20 @@ module.exports = (options) => {
 
         parserOptions: {
           ecmaVersion: 2020,
-          sourceType: jsSourceType || 'module',
+          sourceType: jsSourceType,
           ecmaFeatures: { impliedStrict: true },
         },
 
-        plugins: ['prettier'],
+        plugins: ['import', 'prettier'],
         extends: ['eslint:recommended', 'prettier'],
+
+        settings: {
+          'import/resolver': {
+            node: {
+              paths: additionalPaths,
+            },
+          },
+        },
 
         env: {
           es2020: true,
@@ -55,6 +86,7 @@ module.exports = (options) => {
 
         rules: {
           'prettier/prettier': 'error',
+          ...(jsSourceType === 'script' ? cjsImportRules : esmImportRules),
         },
 
         overrides: [
@@ -88,6 +120,23 @@ module.exports = (options) => {
           'prettier/@typescript-eslint',
         ],
 
+        settings: {
+          'import/extensions': ['.js', '.ts', '.d.ts'],
+          'import/external-module-folders': [
+            'node_modules',
+            'node_modules/@types',
+          ],
+          'import/parsers': {
+            '@typescript-eslint/parser': ['.ts', '.d.ts'],
+          },
+          'import/resolver': {
+            node: {
+              paths: additionalPaths,
+              extensions: ['.js', '.ts', '.d.ts'],
+            },
+          },
+        },
+
         env: {
           es2020: true,
           node: true,
@@ -95,6 +144,7 @@ module.exports = (options) => {
 
         rules: {
           'prettier/prettier': 'error',
+          ...tsImportRules,
         },
 
         overrides: [

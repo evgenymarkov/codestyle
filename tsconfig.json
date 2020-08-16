@@ -1,0 +1,32 @@
+{
+  "exclude": ["./node_modules"],
+  "compilerOptions": {
+    /* Basic Options */
+    "noEmit": true,
+    "allowJs": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+
+    /* Typings */
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "Node",
+
+    /* Advanced Options */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

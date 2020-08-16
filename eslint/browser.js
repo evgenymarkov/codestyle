@@ -20,9 +20,9 @@ const tsImportRules = {
 /**
  * TypeScript options
  *
- * @typedef {Object} TypeScriptOptions
- * @property {import('@typescript-eslint/parser').ParserOptions['tsconfigRootDir']} rootDir
- * @property {import('@typescript-eslint/parser').ParserOptions['project']} project
+ * @typedef {Object} TSOptions
+ * @property {string} rootDir
+ * @property {string | string[]} project
  */
 
 /**
@@ -30,19 +30,18 @@ const tsImportRules = {
  *
  * @typedef {Object} Options
  * @property {string[]} additionalPaths
- * @property {TypeScriptOptions} tsOptions
+ * @property {TSOptions} tsOptions
  */
 
 /**
  * Get ESLint config
  *
- * @param {Options} options
+ * @param {Options=} options
  * @returns {import('eslint').Linter.Config}
  */
-module.exports = (options) => {
-  const additionalPaths = options['additionalPaths'] || [];
-  const tsRootDir = options['tsOptions']['rootDir'];
-  const tsProject = options['tsOptions']['project'];
+module.exports = (options = {}) => {
+  const additionalPaths = options.additionalPaths || [];
+  const tsOptions = options.tsOptions;
 
   return {
     overrides: [
@@ -75,7 +74,9 @@ module.exports = (options) => {
           'import/resolver': {
             node: {
               paths: additionalPaths,
-              extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts'],
+              extensions: tsOptions
+                ? ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
+                : ['.js', '.jsx'],
             },
           },
         },
@@ -105,14 +106,14 @@ module.exports = (options) => {
         ],
       },
 
-      {
+      tsOptions && {
         files: ['*.ts', '*.tsx'],
 
         parser: '@typescript-eslint/parser',
         parserOptions: {
           ecmaFeatures: { jsx: true },
-          tsconfigRootDir: tsRootDir,
-          project: tsProject,
+          tsconfigRootDir: tsOptions.rootDir,
+          project: tsOptions.project,
         },
 
         plugins: [
@@ -178,6 +179,6 @@ module.exports = (options) => {
           },
         ],
       },
-    ],
+    ].filter(Boolean),
   };
 };

@@ -1,5 +1,22 @@
 'use strict';
 
+const esmImportRules = {
+  'import/default': 'error',
+  'import/export': 'error',
+  'import/named': 'error',
+  'import/namespace': 'error',
+  'import/no-unresolved': 'error',
+
+  'import/no-duplicates': 'warn',
+  'import/no-named-as-default': 'warn',
+  'import/no-named-as-default-member': 'warn',
+};
+
+const tsImportRules = {
+  ...esmImportRules,
+  'import/named': 'off',
+};
+
 /**
  * TypeScript options
  *
@@ -12,6 +29,7 @@
  * Options
  *
  * @typedef {Object} Options
+ * @property {string[]} additionalPaths
  * @property {TypeScriptOptions} tsOptions
  */
 
@@ -22,6 +40,7 @@
  * @returns {import('eslint').Linter.Config}
  */
 module.exports = (options) => {
+  const additionalPaths = options['additionalPaths'] || [];
   const tsRootDir = options['tsOptions']['rootDir'];
   const tsProject = options['tsOptions']['project'];
 
@@ -39,7 +58,7 @@ module.exports = (options) => {
           },
         },
 
-        plugins: ['react', 'react-hooks', 'jsx-a11y', 'prettier'],
+        plugins: ['react', 'react-hooks', 'jsx-a11y', 'import', 'prettier'],
         extends: [
           'eslint:recommended',
           'plugin:react/recommended',
@@ -49,8 +68,14 @@ module.exports = (options) => {
         ],
 
         settings: {
-          react: {
+          'react': {
             version: 'detect',
+          },
+          'import/extensions': ['.js', '.jsx'],
+          'import/resolver': {
+            node: {
+              paths: additionalPaths,
+            },
           },
         },
 
@@ -63,6 +88,7 @@ module.exports = (options) => {
           'prettier/prettier': 'error',
           'react-hooks/rules-of-hooks': 'error',
           'react-hooks/exhaustive-deps': 'error',
+          ...esmImportRules,
         },
 
         overrides: [
@@ -93,6 +119,7 @@ module.exports = (options) => {
           'react',
           'react-hooks',
           'jsx-a11y',
+          'import',
           'prettier',
         ],
         extends: [
@@ -107,8 +134,22 @@ module.exports = (options) => {
         ],
 
         settings: {
-          react: {
+          'react': {
             version: 'detect',
+          },
+          'import/extensions': ['.js', '.jsx', '.ts', '.tsx', '.d.ts'],
+          'import/external-module-folders': [
+            'node_modules',
+            'node_modules/@types',
+          ],
+          'import/parsers': {
+            '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'],
+          },
+          'import/resolver': {
+            node: {
+              paths: additionalPaths,
+              extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts'],
+            },
           },
         },
 
@@ -121,6 +162,7 @@ module.exports = (options) => {
           'prettier/prettier': 'error',
           'react-hooks/rules-of-hooks': 'error',
           'react-hooks/exhaustive-deps': 'error',
+          ...tsImportRules,
         },
 
         overrides: [

@@ -1,6 +1,6 @@
 {
   "name": "@evgenymarkov/codestyle",
-  "version": "1.0.0-1",
+  "version": "1.0.0",
   "description": "Utilities for maintaining code style",
   "license": "MIT",
   "author": {
@@ -25,7 +25,8 @@
   "files": [
     "eslint",
     "prettier",
-    "stylelint"
+    "stylelint",
+    "README.md"
   ],
   "dependencies": {
     "@types/eslint": "7.2.0",

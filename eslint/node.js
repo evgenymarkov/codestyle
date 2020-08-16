@@ -75,6 +75,7 @@ module.exports = (options) => {
           'import/resolver': {
             node: {
               paths: additionalPaths,
+              extensions: ['.js', '.ts', '.d.ts'],
             },
           },
         },

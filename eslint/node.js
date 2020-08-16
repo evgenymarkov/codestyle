@@ -24,38 +24,37 @@ const tsImportRules = {
 /**
  * JavaScript options
  *
- * @typedef {Object} JavaScriptOptions
+ * @typedef {Object} JSOptions
  * @property {import('eslint').Linter.ParserOptions['sourceType']} sourceType
  */
 
 /**
  * TypeScript options
  *
- * @typedef {Object} TypeScriptOptions
- * @property {import('@typescript-eslint/parser').ParserOptions['tsconfigRootDir']} rootDir
- * @property {import('@typescript-eslint/parser').ParserOptions['project']} project
+ * @typedef {Object} TSOptions
+ * @property {string} rootDir
+ * @property {string | string[]} project
  */
 
 /**
  * Options
  *
  * @typedef {Object} Options
- * @property {string[]} additionalPaths
- * @property {JavaScriptOptions} jsOptions
- * @property {TypeScriptOptions} tsOptions
+ * @property {string[]=} additionalPaths
+ * @property {JSOptions=} jsOptions
+ * @property {TSOptions=} tsOptions
  */
 
 /**
  * Get ESLint config
  *
- * @param {Options} options
+ * @param {Options=} options
  * @returns {import('eslint').Linter.Config}
  */
-module.exports = (options) => {
-  const additionalPaths = options['additionalPaths'] || [];
-  const jsSourceType = options['jsOptions']['sourceType'] || 'module';
-  const tsRootDir = options['tsOptions']['rootDir'];
-  const tsProject = options['tsOptions']['project'];
+module.exports = (options = {}) => {
+  const additionalPaths = options.additionalPaths || [];
+  const jsOptions = options.jsOptions || { sourceType: 'script' };
+  const tsOptions = options.tsOptions;
 
   return {
     overrides: [
@@ -64,7 +63,7 @@ module.exports = (options) => {
 
         parserOptions: {
           ecmaVersion: 2020,
-          sourceType: jsSourceType,
+          sourceType: jsOptions.sourceType,
           ecmaFeatures: { impliedStrict: true },
         },
 
@@ -75,7 +74,7 @@ module.exports = (options) => {
           'import/resolver': {
             node: {
               paths: additionalPaths,
-              extensions: ['.js', '.ts', '.d.ts'],
+              extensions: tsOptions ? ['.js', '.ts', '.d.ts'] : ['.js'],
             },
           },
         },
@@ -87,7 +86,9 @@ module.exports = (options) => {
 
         rules: {
           'prettier/prettier': 'error',
-          ...(jsSourceType === 'script' ? cjsImportRules : esmImportRules),
+          ...(jsOptions.sourceType === 'script'
+            ? cjsImportRules
+            : esmImportRules),
         },
 
         overrides: [
@@ -103,13 +104,13 @@ module.exports = (options) => {
         ],
       },
 
-      {
+      tsOptions && {
         files: ['*.ts'],
 
         parser: '@typescript-eslint/parser',
         parserOptions: {
-          tsconfigRootDir: tsRootDir,
-          project: tsProject,
+          tsconfigRootDir: tsOptions.rootDir,
+          project: tsOptions.project,
         },
 
         plugins: ['@typescript-eslint', 'prettier'],
@@ -160,6 +161,6 @@ module.exports = (options) => {
           },
         ],
       },
-    ],
+    ].filter(Boolean),
   };
 };

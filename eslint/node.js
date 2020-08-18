@@ -1,5 +1,8 @@
 'use strict';
 
+const jsExtensions = ['.js', '.cjs', '.mjs'];
+const tsExtensions = ['.ts', '.d.ts'];
+
 const cjsImportRules = {
   'import/no-unresolved': ['error', { commonjs: true }],
 };
@@ -59,7 +62,7 @@ module.exports = (options = {}) => {
   return {
     overrides: [
       {
-        files: ['*.js'],
+        files: ['*.js', '*.cjs', '*.mjs'],
 
         parserOptions: {
           ecmaVersion: 2020,
@@ -74,7 +77,9 @@ module.exports = (options = {}) => {
           'import/resolver': {
             node: {
               paths: additionalPaths,
-              extensions: tsOptions ? ['.js', '.ts', '.d.ts'] : ['.js'],
+              extensions: tsOptions
+                ? [...jsExtensions, ...tsExtensions]
+                : jsExtensions,
             },
           },
         },
@@ -93,7 +98,14 @@ module.exports = (options = {}) => {
 
         overrides: [
           {
-            files: ['*.spec.js'],
+            files: [
+              '*.test.js',
+              '*.test.cjs',
+              '*.test.mjs',
+              '*.spec.js',
+              '*.spec.cjs',
+              '*.spec.mjs',
+            ],
 
             env: {
               es2020: true,
@@ -123,18 +135,18 @@ module.exports = (options = {}) => {
         ],
 
         settings: {
-          'import/extensions': ['.js', '.ts', '.d.ts'],
+          'import/extensions': [...jsExtensions, ...tsExtensions],
           'import/external-module-folders': [
             'node_modules',
             'node_modules/@types',
           ],
           'import/parsers': {
-            '@typescript-eslint/parser': ['.ts', '.d.ts'],
+            '@typescript-eslint/parser': tsExtensions,
           },
           'import/resolver': {
             node: {
               paths: additionalPaths,
-              extensions: ['.js', '.ts', '.d.ts'],
+              extensions: [...jsExtensions, ...tsExtensions],
             },
           },
         },
@@ -151,7 +163,7 @@ module.exports = (options = {}) => {
 
         overrides: [
           {
-            files: ['*.spec.ts'],
+            files: ['*.test.ts', '*.spec.ts'],
 
             env: {
               es2020: true,

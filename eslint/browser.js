@@ -95,7 +95,7 @@ module.exports = (options = {}) => {
 
         overrides: [
           {
-            files: ['*.spec.js', '*.spec.jsx'],
+            files: ['*.test.js', '*.test.jsx', '*.spec.js', '*.spec.jsx'],
 
             env: {
               es2020: true,
@@ -169,7 +169,7 @@ module.exports = (options = {}) => {
 
         overrides: [
           {
-            files: ['*.spec.ts', '*.spec.tsx'],
+            files: ['*.test.ts', '*.test.tsx', '*.spec.ts', '*.spec.tsx'],
 
             env: {
               es2020: true,

@@ -95,7 +95,16 @@ module.exports = (options = {}) => {
 
         overrides: [
           {
-            files: ['*.test.js', '*.test.jsx', '*.spec.js', '*.spec.jsx'],
+            files: [
+              '*.test.js',
+              '*.test.jsx',
+              '*.spec.js',
+              '*.spec.jsx',
+              '*.e2e-test.js',
+              '*.e2e-test.jsx',
+              '*.e2e-spec.js',
+              '*.e2e-spec.jsx',
+            ],
 
             env: {
               es2020: true,
@@ -169,7 +178,16 @@ module.exports = (options = {}) => {
 
         overrides: [
           {
-            files: ['*.test.ts', '*.test.tsx', '*.spec.ts', '*.spec.tsx'],
+            files: [
+              '*.test.ts',
+              '*.test.tsx',
+              '*.spec.ts',
+              '*.spec.tsx',
+              '*.e2e-test.ts',
+              '*.e2e-test.tsx',
+              '*.e2e-spec.ts',
+              '*.e2e-spec.tsx',
+            ],
 
             env: {
               es2020: true,
